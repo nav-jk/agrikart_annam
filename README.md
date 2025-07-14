@@ -122,8 +122,9 @@ These steps involve human verification and cannot be scripted or demoed locally.
 ---
 
 Due to these limitations, we've hosted a working version of the platform for demonstration and testing:
+(Sometimes the service winds down after a period of not using it, it takes a while to startup!!)
 
- **Live Demo**:  
+ ***Live Demo***:  
 [https://agrikart-fd-ws-2a-80.ml.iit-ropar.truefoundry.cloud/](https://agrikart-fd-ws-2a-80.ml.iit-ropar.truefoundry.cloud/)
 =======
 - [AgriVoice README](src/AgriVoice/README.md)
