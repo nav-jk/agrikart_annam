@@ -1,0 +1,93 @@
+# AgriKart.ai: Voice-Driven E-Commerce for Indian Farmers
+
+AgriKart.ai is a revolutionary e-commerce platform that enables Indian farmers to **list and sell their produce using just a WhatsApp voice message**. Built with voice-first technology and powered by AI, it connects farmers and buyers across the nation, even those without literacy skills.
+
+---
+
+##  Why AgriKart?
+
+- **No apps. No typing. Just voice.**
+- **WhatsApp-based onboarding** for farmers
+- **Voice-to-Voice AI assistant** answers agri-related queries in native languages
+- **Seamless produce listing**, discovery, and communication between farmers and buyers
+
+---
+
+##  Project Structure
+
+This monorepo contains all services that make AgriKart.ai work:
+
+```bash
+.
+├── src/
+│   ├── agrivoice/        # Voice-to-voice AI assistant using FastAPI + DeepSeek + gTTS
+│   ├── whisper/          # Audio transcription 
+│   ├── search_bot/       # Google CSE wrapper for farming context
+│   ├── backend/          # Django backend (JWT auth, produce listings, users)
+│   └── frontend/         # React dashboard for admin/buyers
+│   └── whatsapp_bot/     
+├── notebooks/            
+├── tests/                
+├── docs/
+│   ├── architecture.png  # System architecture diagram
+│   └── cards/
+│       ├── project-card.ipynb
+│       └── ml-metrics.json
+├── docker-compose.yml
+├── logs.txt              # Docker + API logs
+├── transcript.txt        
+└── README.md             
+
+##  Setup Instructions
+
+### Prerequisites
+
+- Docker + Docker Compose  
+- Python 3.11  
+- Node.js 20+  
+- `.env` files in each service folder (see below)
+
+---
+
+### Run Everything (Development)
+
+```bash
+docker-compose up --build
+
+##  .env Setup
+
+### `agrivoice/.env`
+
+```env
+GOOGLE_API_KEY=your_google_key
+GOOGLE_CSE_ID=your_cse_id
+OPENROUTER_API_KEY=your_openrouter_key
+```
+
+```env
+GOOGLE_API_KEY=your_google_key
+GOOGLE_CSE_ID=your_cse_id
+```
+
+```env
+SECRET_KEY=your_django_secret
+DEBUG=True
+DB_PATH=/data/db.sqlite3
+```
+
+```env
+WHATSAPP_TOKEN=...
+VERIFY_TOKEN=...
+WHATSAPP_PHONE_ID=...
+```
+
+##  Project-Level READMEs
+
+Each subcomponent of AgriKart.ai is modularized and documented individually:
+
+- [AgriVoice README](src/agrivoice/README.md)
+- [Whisper README](src/whisper/README.md)
+- [Search Bot README](src/search_bot/README.md)
+- [Backend (Django) README](src/backend/README.md)
+- [Frontend (React) README](src/frontend/README.md)
+- [WhatsApp Bot README](src/whatsapp_bot/README.md)
