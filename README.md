@@ -13,6 +13,9 @@ AgriKart.ai is a revolutionary e-commerce platform that enables Indian farmers t
 
 ---
 
+##  Project Architecture
+![image](docs/architecture.png)
+
 ##  Project Structure
 
 This monorepo contains all services that make AgriKart.ai work:
