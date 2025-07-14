@@ -1,0 +1,48 @@
+version: '3.9'
+
+services:
+  whatsapp_bot:
+    build: ./src/whatsapp_bot
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    depends_on:
+      - backend
+      - whisper
+
+  backend:
+    build: ./src/backend
+    ports:
+      - "8001:8000"
+    restart: unless-stopped
+    volumes:
+      - db_data:/data
+
+  frontend:
+    build: ./src/frontend
+    ports:
+      - "3000:80"
+    restart: unless-stopped
+
+  search_bot:
+    build: ./src/search_bot
+    ports:
+      - "8002:8000"
+    restart: unless-stopped
+
+  whisper:
+    build: ./src/whisper
+    ports:
+      - "8003:8000"
+    restart: unless-stopped
+
+  agrivoice:
+    build: ./src/agrivoice
+    ports:
+      - "8004:8000"
+    restart: unless-stopped
+    depends_on:
+      - whisper
+
+volumes:
+  db_data:
