@@ -54,10 +54,11 @@ This monorepo contains all services that make AgriKart.ai work:
 
 ```bash
 docker-compose up --build
+```
 
 ##  .env Setup
 
-### `agrivoice/.env`
+### `AgriVoice/.env`
 
 ```env
 GOOGLE_API_KEY=your_google_key
@@ -65,17 +66,20 @@ GOOGLE_CSE_ID=your_cse_id
 OPENROUTER_API_KEY=your_openrouter_key
 ```
 
+### `Search_bot/.env`
 ```env
 GOOGLE_API_KEY=your_google_key
 GOOGLE_CSE_ID=your_cse_id
 ```
 
+### `Backend/.env`
 ```env
 SECRET_KEY=your_django_secret
 DEBUG=True
 DB_PATH=/data/db.sqlite3
 ```
 
+### `WhatsApp_bot/.env`
 ```env
 WHATSAPP_TOKEN=...
 VERIFY_TOKEN=...
