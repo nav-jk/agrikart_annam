@@ -1,0 +1,732 @@
+/* Import Google Fonts and Font Awesome if not globally imported */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Nunito:wght@700;800;900&display=swap');
+/* Make sure Font Awesome is linked in your index.html or imported for icons */
+/* e.g., <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> */
+
+/* CSS Variables for consistent theming (aligned with other components) */
+:root {
+    /* Primary Brand Colors (Greens) */
+    --color-primary-300: #a5d6a7; /* Light Green */
+    --color-primary-500: #4CAF50; /* Medium Green */
+    --color-primary-600: #388E3C; /* Darker Green */
+    --color-primary-700: #2E7D32; /* Even Darker Green */
+    --color-primary-800: #1B5E20; /* Deep Green */
+    --color-primary-900: #0D47A1; /* Darkest Green, almost navy for deep contrast */
+
+    /* Accent Colors (Yellow/Gold) */
+    --color-accent-300: #FFEB3B; /* Light Yellow */
+    --color-accent-400: #FFD814; /* Bright Yellow */
+    --color-accent-500: #FFC107; /* Gold */
+    --color-accent-600: #FFA000; /* Dark Gold */
+
+    /* Neutral Colors (Grays) */
+    --color-gray-50: #f9fafb; /* Very Light Gray */
+    --color-gray-100: #f3f4f6; /* Light Gray */
+    --color-gray-200: #e5e7eb; /* Off-white */
+    --color-gray-300: #d1d5db;
+    --color-gray-400: #9ca3af; /* Medium Gray */
+    --color-gray-500: #6b7280;
+    --color-gray-600: #4b5563;
+    --color-gray-700: #374151; /* Dark Gray */
+    --color-gray-800: #1f2937; /* Very Dark Gray */
+    --color-gray-900: #111827; /* Near Black */
+
+    /* Text Colors */
+    --text-color-default: var(--color-gray-800);
+    --text-color-light: var(--color-gray-500);
+    --text-color-heading: var(--color-gray-900);
+    --text-color-white: #ffffff;
+
+    /* Backgrounds */
+    --bg-page-light: var(--color-gray-50); /* Very light background for the page */
+    --bg-card: #ffffff; /* White background for cards */
+    --bg-input-light: var(--color-gray-100); /* Light gray for selects */
+    
+    /* Borders */
+    --border-color-light: var(--color-gray-200);
+    --border-card: var(--color-gray-200);
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+    /* Gradients for buttons */
+    --gradient-btn-primary-start: var(--color-primary-600);
+    --gradient-btn-primary-end: var(--color-primary-800);
+    --gradient-btn-primary-hover-start: var(--color-primary-700);
+    --gradient-btn-primary-hover-end: var(--color-primary-900);
+
+    --gradient-btn-add-cart-start: var(--color-accent-400); /* Bright yellow */
+    --gradient-btn-add-cart-end: var(--color-accent-600); /* Dark gold */
+    --gradient-btn-add-cart-hover-start: var(--color-accent-500);
+    --gradient-btn-add-cart-hover-end: var(--color-accent-600);
+
+    /* Error/Success */
+    --color-error-text: #dc2626; /* red-600 */
+    --color-error-bg: #fef2f2; /* red-50 */
+    --color-error-border: #fca5a5; /* red-300 */
+
+    --color-success-text: #16a34a; /* green-600 */
+    --color-success-bg: #f0fdf4; /* green-50 */
+    --color-success-border: #86efac; /* green-300 */
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-page-light);
+    color: var(--text-color-default);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Page Wrapper */
+.cart-page-wrapper {
+    min-height: 100vh; /* Full viewport height */
+    display: flex;
+    justify-content: center;
+    padding: 3rem 2rem; /* Consistent padding with BuyerDashboard */
+    box-sizing: border-box;
+    background-color: var(--bg-page-light); /* Consistent background */
+}
+
+/* Loading and Error States */
+.loading-state, .error-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem; /* More generous padding */
+    background-color: var(--bg-card);
+    border-radius: 16px; /* More rounded */
+    box-shadow: var(--shadow-xl); /* Stronger shadow */
+    text-align: center;
+    margin-top: 3rem; /* Consistent top margin */
+    width: 100%;
+    max-width: 600px; /* Wider for better presentation */
+    min-height: 350px; /* Minimum height for better visual balance */
+    border: 1px solid var(--border-card);
+}
+
+.loading-spinner {
+    border: 6px solid var(--color-gray-200); /* Lighter gray border */
+    border-top-color: var(--color-primary-600); /* Darker green spinner */
+    border-radius: 50%;
+    width: 60px; /* Larger spinner */
+    height: 60px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1.5rem; /* More space below */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.error-message-box {
+    padding: 2rem; /* Generous padding */
+    border-radius: 12px;
+    background-color: var(--color-error-bg);
+    border: 1px solid var(--color-error-border);
+    color: var(--color-error-text);
+    text-align: center;
+}
+
+.error-title {
+    font-size: 2rem; /* Larger title */
+    font-weight: 800; /* Bolder */
+    margin-bottom: 1rem;
+    color: var(--color-error-text);
+}
+
+.error-description {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-color-light); /* Use a lighter text color for description */
+}
+
+.refresh-btn {
+    background: linear-gradient(135deg, var(--gradient-btn-primary-start), var(--gradient-btn-primary-end));
+    color: var(--text-color-white);
+    padding: 0.8rem 1.8rem; /* Larger padding */
+    border: none;
+    border-radius: 10px; /* More rounded */
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-md);
+}
+
+.refresh-btn:hover {
+    background: linear-gradient(135deg, var(--gradient-btn-primary-hover-start), var(--gradient-btn-primary-hover-end));
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Main Cart Container */
+.cart-container {
+    background-color: var(--bg-card);
+    border-radius: 16px; /* More rounded */
+    box-shadow: var(--shadow-2xl); /* Stronger shadow */
+    padding: 3rem; /* More generous padding */
+    width: 100%;
+    max-width: 1300px; /* Wider for cart layout */
+    box-sizing: border-box;
+    border: 1px solid var(--border-card);
+}
+
+.cart-header {
+    font-family: 'Nunito', sans-serif;
+    font-size: 2.8rem; /* Larger heading */
+    color: var(--color-primary-800); /* Deep green */
+    margin-bottom: 2.5rem; /* More space below */
+    text-align: center;
+    border-bottom: 2px solid var(--border-color-light); /* Lighter border */
+    padding-bottom: 1.5rem; /* More padding */
+    font-weight: 900; /* Extra bold */
+    letter-spacing: -0.05em;
+}
+
+/* Top-level Error Message for non-empty cart */
+.cart-top-error-message {
+    background-color: var(--color-error-bg);
+    color: var(--color-error-text);
+    border: 1px solid var(--color-error-border);
+    border-radius: 10px; /* More rounded */
+    padding: 1rem 1.5rem; /* Generous padding */
+    margin-bottom: 2rem; /* More space below */
+    font-size: 0.95rem;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Empty Cart State */
+.empty-cart-state {
+    text-align: center;
+    padding: 4rem 2rem; /* More padding */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem; /* More space between elements */
+}
+
+.empty-cart-icon {
+    font-size: 5rem; /* Larger icon */
+    color: var(--color-gray-300); /* Lighter gray for empty state icon */
+}
+
+.empty-message {
+    font-size: 1.4rem; /* More prominent message */
+    color: var(--text-color-light);
+    margin: 0;
+    font-weight: 600;
+}
+
+.continue-shopping-btn {
+    background: linear-gradient(135deg, var(--gradient-btn-primary-start), var(--gradient-btn-primary-end));
+    color: var(--text-color-white);
+    padding: 1rem 2rem; /* Larger padding */
+    border-radius: 10px; /* More rounded */
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.05rem;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-md);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.continue-shopping-btn:hover {
+    background: linear-gradient(135deg, var(--gradient-btn-primary-hover-start), var(--gradient-btn-primary-hover-end));
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Cart Grid Layout (for items and summary) */
+.cart-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* Cart items take 2/3, summary takes 1/3 */
+    gap: 2.5rem; /* More space between sections */
+}
+
+.cart-items-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* More space between items */
+}
+
+.cart-item-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem; /* More space between elements */
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: 12px; /* More rounded */
+    padding: 1.25rem 1.5rem; /* Generous padding */
+    box-shadow: var(--shadow-md); /* Soft shadow */
+    position: relative; /* For positioning remove button */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cart-item-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+.item-image-wrapper {
+    flex-shrink: 0;
+    width: 110px; /* Slightly larger image */
+    height: 110px;
+    border-radius: 10px; /* More rounded */
+    overflow: hidden;
+    border: 1px solid var(--border-color-light);
+    background-color: var(--bg-input-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.item-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.item-details {
+    flex-grow: 1;
+}
+
+.item-name {
+    font-size: 1.25rem; /* Larger and bolder name */
+    font-weight: 700;
+    color: var(--text-color-heading);
+    margin-bottom: 0.5rem;
+}
+
+.item-price, .item-farmer {
+    font-size: 0.95rem;
+    color: var(--text-color-light);
+    margin-bottom: 0.25rem;
+}
+
+.item-quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* More space between controls */
+    flex-shrink: 0;
+}
+
+.qty-btn {
+    background-color: var(--color-primary-600); /* Darker green */
+    color: var(--text-color-white);
+    border: none;
+    border-radius: 8px; /* More rounded */
+    width: 40px; /* Larger buttons */
+    height: 40px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.qty-btn:hover:not(:disabled) {
+    background-color: var(--color-primary-700); /* Even darker green on hover */
+    transform: scale(1.05);
+}
+
+.qty-btn:disabled {
+    background-color: var(--color-gray-300);
+    color: var(--color-gray-500);
+    cursor: not-allowed;
+}
+
+.qty-input {
+    width: 70px; /* Wider quantity input */
+    padding: 0.6rem 0.4rem;
+    border: 1px solid var(--border-color-light);
+    border-radius: 8px;
+    text-align: center;
+    font-size: 1rem;
+    color: var(--text-color-default);
+    background-color: var(--bg-input-light);
+    -moz-appearance: textfield; /* Remove arrows in Firefox */
+}
+
+/* Hide arrows in Chrome/Safari/Edge for number input */
+.qty-input::-webkit-outer-spin-button,
+.qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.item-subtotal {
+    text-align: right;
+    flex-shrink: 0;
+    min-width: 120px; /* More space for subtotal */
+}
+
+.item-subtotal p:first-child {
+    font-size: 0.9em;
+    color: var(--text-color-light);
+    margin-bottom: 0.25rem;
+}
+
+.subtotal-amount {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-primary-700); /* Deep green for subtotal */
+}
+
+.remove-item-btn {
+    background-color: transparent;
+    border: none;
+    color: var(--color-error-text);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: color 0.2s ease, background-color 0.2s ease;
+    padding: 0.5rem 0.75rem; /* More padding for touch */
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    white-space: nowrap;
+    position: absolute; /* Position relative to item-card */
+    top: 0.75rem; /* 12px */
+    right: 0.75rem; /* 12px */
+    font-weight: 600;
+}
+
+.remove-item-btn:hover {
+    color: #b91c1c; /* Darker red on hover */
+    background-color: var(--color-error-bg);
+}
+
+/* Cart Summary Section */
+.cart-summary-section {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: 16px; /* More rounded */
+    padding: 2rem; /* Generous padding */
+    box-shadow: var(--shadow-lg); /* Soft shadow */
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* More space */
+    height: fit-content;
+    position: sticky; /* Sticky summary on scroll */
+    top: 2rem; /* Offset from top, adjust based on navbar height */
+}
+
+.summary-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.8rem; /* Larger title */
+    color: var(--color-primary-700); /* Deep green */
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color-light);
+    padding-bottom: 0.75rem;
+    font-weight: 800;
+}
+
+.summary-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
+    color: var(--text-color-default);
+}
+
+.summary-line strong {
+    font-weight: 700;
+    color: var(--text-color-heading);
+}
+
+.summary-line.total-line {
+    font-size: 1.4rem; /* Larger total font */
+    font-weight: 800;
+    color: var(--color-primary-800); /* Even deeper green for total */
+    padding-top: 1.25rem;
+    border-top: 1px dashed var(--border-color-light);
+    margin-top: 0.75rem;
+}
+
+.cart-total-amount {
+    font-size: 1.6rem; /* Even larger total amount */
+    font-weight: 900;
+    color: var(--color-primary-900); /* Darkest green for final total */
+}
+
+.proceed-to-checkout-btn {
+    background: linear-gradient(135deg, var(--gradient-btn-primary-start), var(--gradient-btn-primary-end));
+    color: var(--text-color-white);
+    padding: 1rem 2rem; /* Larger padding */
+    border: none;
+    border-radius: 10px; /* More rounded */
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 1.5rem;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%; /* Full width button */
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.proceed-to-checkout-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, var(--gradient-btn-primary-hover-start), var(--gradient-btn-primary-hover-end));
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-xl);
+}
+
+.proceed-to-checkout-btn:disabled {
+    background: var(--color-gray-300);
+    color: var(--color-gray-600);
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: translateY(0);
+    opacity: 0.7;
+}
+
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .cart-grid {
+        grid-template-columns: 1fr; /* Stack items and summary on smaller screens */
+        gap: 2rem;
+    }
+    .cart-summary-section {
+        position: static; /* Remove sticky on smaller screens */
+        margin-top: 2rem;
+    }
+    .cart-item-card {
+        flex-wrap: wrap; /* Allow items to wrap */
+        justify-content: center;
+        text-align: center;
+        padding-bottom: 4.5rem; /* More space for remove button if positioned absolutely */
+    }
+    .item-image-wrapper {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 1rem; /* Add margin below image when stacked */
+    }
+    .item-details {
+        flex-basis: 100%; /* Take full width */
+        margin-bottom: 1rem;
+    }
+    .item-quantity-controls {
+        width: 100%;
+        justify-content: center;
+        margin-top: 1rem;
+    }
+    .item-subtotal {
+        width: 100%;
+        text-align: center;
+        margin-top: 1rem;
+    }
+    .remove-item-btn {
+        position: absolute;
+        bottom: 1rem; /* 16px from bottom */
+        left: 50%;
+        transform: translateX(-50%);
+        width: auto;
+        padding: 0.6rem 1rem;
+        background-color: var(--color-error-bg); /* Ensure it's visible on smaller screens */
+        border: 1px solid var(--color-error-border);
+    }
+}
+
+@media (max-width: 768px) {
+    .cart-container {
+        padding: 2rem 1.5rem;
+    }
+    .cart-header {
+        font-size: 2.2rem;
+        margin-bottom: 2rem;
+    }
+    .loading-state, .error-state {
+        padding: 2rem;
+        min-height: 300px;
+    }
+    .loading-spinner {
+        width: 50px;
+        height: 50px;
+    }
+    .error-title {
+        font-size: 1.6rem;
+    }
+    .error-description {
+        font-size: 1rem;
+    }
+    .refresh-btn {
+        padding: 0.7rem 1.5rem;
+        font-size: 0.95rem;
+    }
+    .cart-item-card {
+        padding: 1rem 1.2rem;
+        gap: 1rem;
+    }
+    .item-image-wrapper {
+        width: 90px;
+        height: 90px;
+    }
+    .item-name {
+        font-size: 1.1rem;
+    }
+    .item-price, .item-farmer {
+        font-size: 0.85rem;
+    }
+    .qty-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 1.2rem;
+    }
+    .qty-input {
+        width: 60px;
+        padding: 0.5rem 0.3rem;
+        font-size: 0.9rem;
+    }
+    .subtotal-amount {
+        font-size: 1.15rem;
+    }
+    .summary-title {
+        font-size: 1.6rem;
+    }
+    .summary-line {
+        font-size: 0.95rem;
+    }
+    .summary-line.total-line {
+        font-size: 1.2rem;
+    }
+    .cart-total-amount {
+        font-size: 1.4rem;
+    }
+    .proceed-to-checkout-btn {
+        font-size: 1rem;
+        padding: 0.8rem 1.6rem;
+    }
+    .empty-cart-icon {
+        font-size: 4rem;
+    }
+    .empty-message {
+        font-size: 1.2rem;
+    }
+    .continue-shopping-btn {
+        font-size: 0.95rem;
+        padding: 0.8rem 1.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .cart-page-wrapper {
+        padding: 1.5rem 1rem;
+    }
+    .cart-container {
+        padding: 1.5rem;
+        border-radius: 12px;
+    }
+    .cart-header {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+    }
+    .loading-state, .error-state {
+        padding: 1.5rem;
+        min-height: 250px;
+    }
+    .loading-spinner {
+        width: 40px;
+        height: 40px;
+    }
+    .error-title {
+        font-size: 1.4rem;
+    }
+    .error-description {
+        font-size: 0.9rem;
+    }
+    .refresh-btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+    .cart-item-card {
+        padding: 0.8rem 1rem;
+        gap: 0.8rem;
+    }
+    .item-image-wrapper {
+        width: 70px;
+        height: 70px;
+    }
+    .item-name {
+        font-size: 1rem;
+        margin-bottom: 0.25rem;
+    }
+    .item-price, .item-farmer {
+        font-size: 0.8rem;
+    }
+    .qty-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 1.1rem;
+    }
+    .qty-input {
+        width: 50px;
+        padding: 0.4rem 0.2rem;
+        font-size: 0.85rem;
+    }
+    .item-subtotal {
+        min-width: 90px;
+    }
+    .subtotal-amount {
+        font-size: 1.05rem;
+    }
+    .remove-item-btn {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.6rem;
+        bottom: 0.75rem;
+    }
+    .cart-summary-section {
+        padding: 1.5rem;
+        border-radius: 12px;
+    }
+    .summary-title {
+        font-size: 1.4rem;
+        margin-bottom: 0.8rem;
+        padding-bottom: 0.6rem;
+    }
+    .summary-line {
+        font-size: 0.9rem;
+    }
+    .summary-line.total-line {
+        font-size: 1.05rem;
+        padding-top: 1rem;
+    }
+    .cart-total-amount {
+        font-size: 1.2rem;
+    }
+    .proceed-to-checkout-btn {
+        font-size: 0.95rem;
+        padding: 0.7rem 1.4rem;
+    }
+    .empty-cart-icon {
+        font-size: 3.5rem;
+    }
+    .empty-message {
+        font-size: 1.1rem;
+    }
+    .continue-shopping-btn {
+        font-size: 0.9rem;
+        padding: 0.7rem 1.5rem;
+    }
+}

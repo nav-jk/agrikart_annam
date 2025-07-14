@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+httpx
+gTTS
+python-dotenv
+requests
+python-multipart
+pydub
+regex
