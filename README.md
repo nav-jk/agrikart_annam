@@ -36,7 +36,8 @@ This monorepo contains all services that make AgriKart.ai work:
 ├── docker-compose.yml
 ├── logs.txt              # Docker + API logs
 ├── transcript.txt        
-└── README.md             
+└── README.md         
+```    
 
 ##  Setup Instructions
 
