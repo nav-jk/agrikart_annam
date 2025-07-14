@@ -90,7 +90,6 @@ WHATSAPP_PHONE_ID=...
 
 Each subcomponent of AgriKart.ai is modularized and documented individually:
 
-<<<<<<< HEAD
 - [AgriVoice README](src/agrivoice/README.md)
 - [Whisper README](src/whisper/README.md)
 - [Search Bot README](src/search_bot/README.md)
@@ -133,4 +132,4 @@ Due to these limitations, we've hosted a working version of the platform for dem
 - [Backend (Django) README](src/Backend/README.md)
 - [Frontend (React) README](src/Frontend/README.md)
 - [WhatsApp Bot README](src/WhatsApp_bot/README.md)
->>>>>>> 7b90a15569f5d6e26697cc83f4be7c0c0cda30eb
+
