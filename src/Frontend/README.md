@@ -141,7 +141,7 @@ Manages global auth state
 const { user, login, logout } = useAuth();
 ```
 
-## 🚀 Dev Setup
+##  Dev Setup
 
 ```bash
 npm install

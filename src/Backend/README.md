@@ -281,24 +281,3 @@ After calling `/orders/create-from-cart/`, redirect to:
 
 ---
 
-## FUTURE ROADMAP
-
-- Add image uploads for produce
-- Add buyer order history page
-- Add farmer produce management UI
-- Integrate real payment gateway
-- Implement order cancellation flow
-#  WhatsApp Integration
-
-The WhatsApp integration for this project is being handled by [@debdip4](https://github.com/debdip4).
-
-## 🔗 GitHub Repository
-
-You can find the integration logic and updates here:  
-[https://github.com/annam-ai-iitropar/team_2A/tree/main/AgriKart_Whatsapp_Bot](https://github.com/annam-ai-iitropar/team_2A/tree/main/AgriKart_Whatsapp_Bot)
-
-##  Status
-
-- [x] Integration in progress  
-- [ ] Final testing  
-- [ ] Deployment
