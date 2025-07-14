@@ -11,8 +11,8 @@ load_dotenv()
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")
 
-print("🔑 GOOGLE_API_KEY Loaded:", bool(GOOGLE_API_KEY))
-print("🔑 GOOGLE_CSE_ID Loaded:", bool(GOOGLE_CSE_ID))
+print(" GOOGLE_API_KEY Loaded:", bool(GOOGLE_API_KEY))
+print(" GOOGLE_CSE_ID Loaded:", bool(GOOGLE_CSE_ID))
 
 app = FastAPI()
 
@@ -25,7 +25,7 @@ async def search_handler(request: SearchRequest):
     query = request.query
     max_results = request.num_results
 
-    print(f"\n📥 Received Search Request: query='{query}', num_results={max_results}")
+    print(f"\n Received Search Request: query='{query}', num_results={max_results}")
 
     search_url = "https://www.googleapis.com/customsearch/v1"
     params = {
@@ -35,8 +35,8 @@ async def search_handler(request: SearchRequest):
         "num": max_results
     }
 
-    print("🔧 Request Params:", params)
-    print("🌐 Making GET request to:", search_url)
+    print(" Request Params:", params)
+    print(" Making GET request to:", search_url)
 
     try:
         async with httpx.AsyncClient() as client:
@@ -47,15 +47,15 @@ async def search_handler(request: SearchRequest):
             res.raise_for_status()
 
             data = res.json()
-            print("✅ JSON Loaded")
+            print(" JSON Loaded")
 
             if "items" not in data:
-                print("⚠️ No 'items' in response! Full JSON:", data)
+                print(" No 'items' in response! Full JSON:", data)
 
             snippets = [item.get("snippet", "") for item in data.get("items", [])]
-            print("🔍 Extracted Snippets:", snippets)
+            print(" Extracted Snippets:", snippets)
             return {"snippets": snippets}
 
     except Exception as e:
-        print("❌ TNAU Search Error:", e)
+        print(" TNAU Search Error:", e)
         return JSONResponse(status_code=500, content={"error": str(e)})

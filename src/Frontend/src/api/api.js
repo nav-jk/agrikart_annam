@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// ✅ Set your actual backend URL here
 const api = axios.create({
   baseURL: 'https://agrikart-ws-2a-8000.ml.iit-ropar.truefoundry.cloud/',
 });

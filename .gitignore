@@ -1,0 +1,44 @@
+# Ignore all .env files globally
+**/.env
+**/.env.*
+
+# Common Python ignores
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+*.log
+
+# Jupyter notebooks checkpoints
+.ipynb_checkpoints/
+
+# VSCode/IDE
+.vscode/
+.idea/
+
+# OS/system files
+.DS_Store
+Thumbs.db
+
+# Python virtual environments
+venv/
+env/
+
+# Node dependencies (if React frontend exists)
+node_modules/
+dist/
+build/
+
+# Docker
+*.tar
+*.pid
+
+# Pytest cache
+.cache/
+.pytest_cache/
+
+# Data and outputs
+data/*
+!data/download.sh   # keep this script
+
+

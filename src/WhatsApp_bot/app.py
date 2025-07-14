@@ -160,7 +160,7 @@ def get_weather_forecast(lat, lon, lang='en'):
         data = response.json()
 
         if data.get("cod") != "200":
-            return "❌ Unable to fetch weather data. Please try again."
+            return " Unable to fetch weather data. Please try again."
 
         from datetime import datetime
         from collections import defaultdict
@@ -215,7 +215,7 @@ def get_weather_forecast(lat, lon, lang='en'):
         return forecast_msg
 
     except Exception as e:
-        return f"⚠️ Error fetching weather: {str(e)}"
+        return f" Error fetching weather: {str(e)}"
 
 # Helper to run a function in a thread with timeout
 def run_with_timeout(func, args=(), kwargs={}, timeout=35):
@@ -229,7 +229,7 @@ def run_with_timeout(func, args=(), kwargs={}, timeout=35):
     thread.join(timeout)
 
     if thread.is_alive():
-        print("⏰ Timeout reached while waiting for price prediction.")
+        print(" Timeout reached while waiting for price prediction.")
         return None
     return result.get('value', None)
 
@@ -240,7 +240,7 @@ def sanitize_commodity_name(driver, input_commodity):
         match = get_close_matches(input_commodity, commodity_options, n=1, cutoff=0.6)
         return match[0] if match else None
     except Exception as e:
-        print(f"❌ Error sanitizing commodity name: {e}")
+        print(f" Error sanitizing commodity name: {e}")
         return None
 
 def scrape_agmarknet_prices(state, commodity):
@@ -264,10 +264,10 @@ def scrape_agmarknet_prices(state, commodity):
         # Sanitize commodity
         sanitized_commodity = sanitize_commodity_name(driver, commodity)
         if not sanitized_commodity:
-            print(f"⚠️ No close match found for commodity: '{commodity}'")
+            print(f" No close match found for commodity: '{commodity}'")
             return None
 
-        print(f"✅ Using commodity: {sanitized_commodity}")
+        print(f" Using commodity: {sanitized_commodity}")
 
         # Select inputs
         Select(driver.find_element(By.ID, 'ddlCommodity')).select_by_visible_text(sanitized_commodity)
@@ -307,10 +307,10 @@ def scrape_agmarknet_prices(state, commodity):
                     continue
 
         if not prices:
-            print("⚠️ No prices found.")
+            print(" No prices found.")
             return None
 
-        print(f"📊 {len(prices)} prices found. Sample: {prices[:5]}")
+        print(f" {len(prices)} prices found. Sample: {prices[:5]}")
 
         # Filter and return median
         q1 = np.percentile(prices, 25)
@@ -318,11 +318,11 @@ def scrape_agmarknet_prices(state, commodity):
         iqr = q3 - q1
         filtered = [p for p in prices if q1 - 1.5 * iqr <= p <= q3 + 1.5 * iqr]
         predicted = int(np.median(filtered)) if filtered else int(np.median(prices))
-        print(f"✅ Predicted price: ₹{predicted} per quintal")
+        print(f" Predicted price: ₹{predicted} per quintal")
         return predicted
 
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f" Error: {e}")
         return None
     finally:
         driver.quit()
@@ -415,7 +415,7 @@ def webhook():
         messages = value.get("messages")
 
         if not messages:
-            print("⚠️ Ignored non-message webhook event")
+            print(" Ignored non-message webhook event")
             return 'OK', 200
 
         message = messages[0]
@@ -434,18 +434,18 @@ def webhook():
                 msg_audio_url = media_url_resp.json().get("url")
 
 
-        print(f"📩 Message from {from_number}: '{command}'")
+        print(f" Message from {from_number}: '{command}'")
 
         # Initialize state if new user
         if from_number not in user_states:
             user_states[from_number] = {"data": {}}
 
         current_state = user_states[from_number].get("state")
-        print(f"🔁 Current state for {from_number}: {current_state}")
+        print(f" Current state for {from_number}: {current_state}")
 
         # Greeting to start flow
         if command in ['hi', 'hello', 'नमस्ते']:
-            print(f"📞 Greeting received from {from_number}. Checking existence...")
+            print(f" Greeting received from {from_number}. Checking existence...")
             if check_farmer_exists(from_number):
                 user_states[from_number]['state'] = 'awaiting_lang_after_exists'
                 send_whatsapp_audio(from_number, AUDIO_CLIPS['welcome'])  # Ask language
@@ -541,7 +541,7 @@ def webhook():
                 predicted_price = scrape_agmarknet_prices("Kerala", crop_name)
 
                 if predicted_price:
-                    msg = f"📈 Based on recent market data, the expected price for {crop_name} is ₹{predicted_price} per quintal."
+                    msg = f" Based on recent market data, the expected price for {crop_name} is ₹{predicted_price} per quintal."
                     send_whatsapp_message(from_number, msg)
                     user_states[from_number]['temp_produce']['predicted_price'] = predicted_price
                 else:
@@ -549,7 +549,7 @@ def webhook():
                     send_whatsapp_audio(from_number, AUDIO_CLIPS[lang]['ask_price'])
 
             except Exception as e:
-                print(f"❌ Error during price prediction: {e}")
+                print(f" Error during price prediction: {e}")
                 send_whatsapp_message(from_number, "⚠️ Error predicting price. Please enter it manually.")
                 send_whatsapp_audio(from_number, AUDIO_CLIPS[lang]['ask_price'])
 
@@ -568,7 +568,7 @@ def webhook():
             if token and add_produce_api(user_states[from_number]['temp_produce'], token):
                 send_whatsapp_audio(from_number, AUDIO_CLIPS[lang]['ask_more_crops'])
             else:
-                send_whatsapp_message(from_number, "❌ Failed to save produce.")
+                send_whatsapp_message(from_number, " Failed to save produce.")
             user_states[from_number]['state'] = 'awaiting_more_crops'
 
         elif current_state == 'awaiting_more_crops':
@@ -611,7 +611,7 @@ def webhook():
                         files = {"file": (os.path.basename(temp_audio_path), f, "audio/ogg")}
                         data = {"lang": lang}
                         chat_resp = requests.post(
-                            "https://agrivoice-2-ws-2a-8000.ml.iit-ropar.truefoundry.cloud/chat/",
+                            "http://localhost:8004/chat/",
                             files=files, data=data, timeout=60
                         )
 
@@ -632,7 +632,7 @@ def webhook():
                     if os.path.exists(temp_audio_path):
                         os.remove(temp_audio_path)
             else:
-                send_whatsapp_message(from_number, "⚠️ No voice message found. Please send your doubt as a voice message.")
+                send_whatsapp_message(from_number, " No voice message found. Please send your doubt as a voice message.")
 
 
             # Return to main menu
@@ -661,7 +661,7 @@ def webhook():
             send_whatsapp_audio(from_number, AUDIO_CLIPS[lang]['ask_choice'])
 
     except Exception as e:
-        print(f"❌ Error in webhook: {e}")
+        print(f" Error in webhook: {e}")
 
     return 'OK', 200
 
@@ -703,7 +703,7 @@ def chat():
     data = {'lang': lang}
     try:
         resp = requests.post(
-            'https://agrivoice-2-ws-2a-8000.ml.iit-ropar.truefoundry.cloud/chat',
+            'http://localhost:8004/chat',
             files=files,
             data=data,
             timeout=60

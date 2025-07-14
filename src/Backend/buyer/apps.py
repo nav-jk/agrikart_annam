@@ -5,4 +5,4 @@ class BuyerConfig(AppConfig):
     name = 'buyer'
 
     def ready(self):
-        import buyer.signals  # 👈 IMPORTANT
+        import buyer.signals  

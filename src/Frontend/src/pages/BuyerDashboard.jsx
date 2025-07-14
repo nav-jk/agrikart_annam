@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import api from '../api/api'; // Assuming this is your axios instance
+import api from '../api/api'; 
 import { useAuth } from '../context/AuthContext';
-import '../styles/BuyerDashboard.css'; // Your existing CSS
+import '../styles/BuyerDashboard.css'; 
 
 const BuyerDashboard = () => {
   const [produce, setProduce] = useState([]);
@@ -10,25 +10,24 @@ const BuyerDashboard = () => {
   const [addedToCart, setAddedToCart] = useState({});
   const [quantityError, setQuantityError] = useState({});
   const [loading, setLoading] = useState(true);
-  const [fetchError, setFetchError] = useState(null); // State for main data fetch errors
+  const [fetchError, setFetchError] = useState(null); 
 
   const { user } = useAuth();
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const categoryFilter = query.get('category');
 
-  // Placeholder for Pixabay API Key. REPLACE WITH YOUR ACTUAL KEY IN A REAL APP.
-  // Ideally, this should be handled server-side to prevent exposure.
-  const PIXABAY_API_KEY = '51158823-fea8dc7b468cfc132c8b5ede6'; // <--- Replace this with your key
 
-  // Function to fetch an image from Pixabay
+  const PIXABAY_API_KEY = '51158823-fea8dc7b468cfc132c8b5ede6'; 
+
+
   const fetchProductImage = async (productName) => {
     if (!PIXABAY_API_KEY || PIXABAY_API_KEY === 'YOUR_PIXABAY_API_KEY') {
         console.warn("Pixabay API key is not set. Using placeholder images.");
         return `https://placehold.co/400x300/e0ffe0/1b5e20?text=${productName.replace(/\s/g, '+')}`;
     }
 
-    const searchQuery = encodeURIComponent(productName + ' vegetable'); // Add 'vegetable' for better results
+    const searchQuery = encodeURIComponent(productName + ' vegetable'); 
     const pixabayUrl = `https://pixabay.com/api/?key=${PIXABAY_API_KEY}&q=${searchQuery}&image_type=photo&orientation=horizontal&per_page=3`;
 
     try {
@@ -38,10 +37,10 @@ const BuyerDashboard = () => {
       }
       const data = await response.json();
       if (data.hits && data.hits.length > 0) {
-        // Return the URL of the first high-resolution image found
+     
         return data.hits[0].webformatURL; 
       } else {
-        // No image found, return a generic placeholder or product name placeholder
+        
         return `https://placehold.co/400x300/cccccc/333333?text=${productName.replace(/\s/g, '+')}`;
       }
     } catch (error) {
@@ -55,7 +54,7 @@ const BuyerDashboard = () => {
     setLoading(true);
     setFetchError(null); // Reset error on new fetch
 
-    api.get('/api/v1/farmer/') // Assuming this endpoint returns an array of farmers, each with a 'produce' array
+    api.get('/api/v1/farmer/') 
       .then(async (res) => { // Mark as async to use await inside
         // Flatten the produce from all farmers into a single array
         const allProduce = res.data.flatMap(farmer => 

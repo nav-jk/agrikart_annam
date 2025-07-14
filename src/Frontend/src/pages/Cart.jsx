@@ -14,8 +14,7 @@ const Cart = () => {
 
   // IMPORTANT: Replace 'YOUR_PIXABAY_API_KEY' with your actual Pixabay API key.
   // Obtain a key from https://pixabay.com/api/docs/
-  // In a production environment, it's highly recommended to proxy this through your backend
-  // to prevent exposing your API key and manage rate limits.
+
   const PIXABAY_API_KEY = '51158823-fea8dc7b468cfc132c8b5ede6'; 
 
   // Function to fetch images from Pixabay, returns an array of URLs
@@ -318,7 +317,6 @@ const Cart = () => {
                     <input
                       type="number"
                       min="1"
-                      // Ensure max quantity is based on available stock from produce_info
                       max={item.produce_info?.quantity || 999} 
                       value={item.quantity}
                       onChange={(e) => updateQuantity(item.id, e.target.value)}

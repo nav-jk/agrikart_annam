@@ -4,11 +4,13 @@ from .serializers import FarmerSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets, permissions
 from .serializers import ProduceSerializer
-
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from .models import Farmer
+from rest_framework.views import APIView
+from .serializers import ProduceNamePriceSerializer
+
 
 
 class FarmerViewSet(viewsets.ModelViewSet):
@@ -46,11 +48,6 @@ def check_farmer_exists(request, phone_number):
     return Response({"exists": exists})
 
 
-# views.py
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from .models import Produce
-from .serializers import ProduceNamePriceSerializer
 
 class ProducePricingListView(APIView):
     def get(self, request):

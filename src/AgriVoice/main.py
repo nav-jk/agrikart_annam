@@ -14,7 +14,7 @@ GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 print("🔑 OpenRouter Key Loaded?", bool(OPENROUTER_API_KEY))
 
-PUBLIC_AUDIO_BASE_URL = "https://agrivoice-2-ws-2a-8000.ml.iit-ropar.truefoundry.cloud"
+PUBLIC_AUDIO_BASE_URL = "http://localhost:8004"
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -68,11 +68,11 @@ async def refine_query_with_deepseek(question: str) -> str:
         # Extract only the actual query using regex
         match = re.search(r'"([^"]+)"', content)
         refined_query = match.group(1) if match else content.strip()
-        print("✅ Final Refined Query for Google:", repr(refined_query))
+        print(" Final Refined Query for Google:", repr(refined_query))
 
         return refined_query
     except Exception as e:
-        print("❌ DeepSeek refine failed:", e)
+        print(" DeepSeek refine failed:", e)
         return question
 
 
@@ -81,7 +81,7 @@ async def search_tnau(query: str, max_results=5) -> list[str]:
     Use an external API endpoint to fetch search snippets from agritech.tnau.ac.in.
     This replaces direct Google API call.
     """
-    TNAU_SEARCH_API = "https://agrisearch-ws-2a-8000.ml.iit-ropar.truefoundry.cloud/search/"  # 🔁 Replace with deployed URL if needed
+    TNAU_SEARCH_API = "http://localhost:8002/search/"  #  Replace with deployed URL if needed
 
     try:
         async with httpx.AsyncClient() as client:
@@ -92,7 +92,7 @@ async def search_tnau(query: str, max_results=5) -> list[str]:
             print("📄 TNAU Search Snippets:", snippets)
             return snippets
     except Exception as e:
-        print("❌ TNAU Search API Error:", e)
+        print(" TNAU Search API Error:", e)
         return []
 
 
@@ -119,17 +119,17 @@ async def call_deepseek_with_context(question: str, context_snippets: list[str],
         response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, data=json.dumps(payload))
         response.raise_for_status()
         completion = response.json()
-        print("✅ DeepSeek response generated")
+        print(" DeepSeek response generated")
         return completion["choices"][0]["message"]["content"]
     except Exception as e:
-        print("❌ DeepSeek failed:", e)
+        print(" DeepSeek failed:", e)
         return "Sorry, I'm unable to answer your question at the moment."
 
 def convert_ogg_to_mp3(input_path: str, output_path: str):
     try:
         sound = AudioSegment.from_ogg(input_path)
         sound.export(output_path, format="mp3")
-        print("🎵 Converted OGG to MP3")
+        print(" Converted OGG to MP3")
     except Exception as e:
         print("Conversion error:", e)
 
@@ -141,7 +141,7 @@ def generate_tts(text: str, lang: str) -> str | None:
         os.makedirs(audio_dir, exist_ok=True)
         path = os.path.join(audio_dir, filename)
         tts.save(path)
-        print("🔊 Audio saved at:", path)
+        print(" Audio saved at:", path)
         return f"{PUBLIC_AUDIO_BASE_URL}/static/audio/{filename}"
     except Exception as e:
         print("TTS error:", e)
@@ -154,7 +154,7 @@ async def chat(file: UploadFile = File(...), lang: str = Form(...)):
         with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
             tmp.write(await file.read())
             raw_audio_path = tmp.name
-            print("📥 Audio uploaded to:", raw_audio_path)
+            print(" Audio uploaded to:", raw_audio_path)
 
         if raw_audio_path.endswith(".ogg"):
             mp3_audio_path = raw_audio_path.replace(".ogg", ".mp3")
@@ -163,7 +163,7 @@ async def chat(file: UploadFile = File(...), lang: str = Form(...)):
         else:
             mp3_audio_path = raw_audio_path
 
-        transcription_api_url = "https://agrivoice-api-ws-2a-8000.ml.iit-ropar.truefoundry.cloud/chat/"
+        transcription_api_url = "http://localhost:8003/chat/"
         async with httpx.AsyncClient() as client:
             with open(mp3_audio_path, "rb") as f:
                 files = {"file": (file.filename, f, "audio/mpeg")}
@@ -175,30 +175,30 @@ async def chat(file: UploadFile = File(...), lang: str = Form(...)):
 
         transcribed = response.json()
         question = transcribed.get("transcription", "")
-        print("🗣 Transcription:", question)
+        print(" Transcription:", question)
 
     except Exception as e:
-        print("❌ Transcription failed:", e)
+        print(" Transcription failed:", e)
         return JSONResponse({"error": f"Transcription failed: {str(e)}"}, status_code=500)
 
-    # ✨ Refine query
+    #  Refine query
     refined_query = await refine_query_with_deepseek(question)
-    # ✨ Search TNAU with refined query
+    #  Search TNAU with refined query
     context = await search_tnau(refined_query)
 
-    # ✨ Generate reply
+    #  Generate reply
     lang_name = LANG_MAP.get(lang, "Hindi")
     reply = await call_deepseek_with_context(question, context, lang_name)
 
-    # ✨ Sanitize reply
+    #  Sanitize reply
     reply = reply.strip()
     if len(reply) > 1000:
         reply = reply[:1000] + "..."
     if not reply.strip():
-        print("⚠️ Empty or invalid reply detected:", repr(reply))
+        print(" Empty or invalid reply detected:", repr(reply))
         reply = "Sorry, I couldn't process your question. Please try again."
 
-    print("🤖 Final reply:", repr(reply))
+    print(" Final reply:", repr(reply))
 
     audio_url = generate_tts(reply, lang)
 

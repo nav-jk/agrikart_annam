@@ -54,8 +54,7 @@ const Me = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setProfile(res.data);
-      // Initialize notification setting from profile if available, otherwise default
-      // Assuming profile.user might have a 'notifications_enabled' field
+
       if (typeof res.data.user.notifications_enabled !== 'undefined') {
         setEmailNotificationsEnabled(res.data.user.notifications_enabled);
       }
@@ -169,8 +168,6 @@ const Me = () => {
     const token = localStorage.getItem('access');
 
     try {
-      // Assuming /api/v1/auth/me/ endpoint can accept nested updates for buyer address
-      // Backend should handle updating the buyer's address associated with the user.
       await api.put(`/api/v1/buyer/${profile.user.phone_number}/`, {
       address: editAddressData.address,
       user: profile.user.id // Ensure user ID is passed to associate it properly
@@ -209,8 +206,7 @@ const Me = () => {
   const handleChangePassword = useCallback(() => {
     console.log("Change Password button clicked.");
     showToast('info', 'Password change functionality is under development. Please contact support.');
-    // In a real app, this would navigate to a dedicated password change form
-    // or open a complex modal for current/new password input.
+
   }, [showToast]);
 
   // New: Handle Toggle Email Notifications
@@ -250,7 +246,7 @@ const Me = () => {
   }
 
   try {
-    // 🔥 Real DELETE request to backend
+
     await api.delete(`/api/v1/buyer/${profile.user.phone_number}/`, {
       headers: { Authorization: `Bearer ${token}` },
     });

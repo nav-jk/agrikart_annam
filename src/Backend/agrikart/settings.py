@@ -9,7 +9,7 @@ DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
 # Domain for absolute URLs
-DOMAIN = "https://agrikart-ws-2a-8000.ml.iit-ropar.truefoundry.cloud"
+DOMAIN = "http://localhost:8001"
 
 # Application definition
 INSTALLED_APPS = [
@@ -105,22 +105,22 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# ✅ CORS / CSRF
+#  CORS / CSRF
 CORS_ALLOWED_ORIGINS = [
     "https://agrikart-fd-ws-2a-80.ml.iit-ropar.truefoundry.cloud",
     "https://agrikart-ws-2a-8000.ml.iit-ropar.truefoundry.cloud",
-    "https://agrikart-whatsapp-ws-2a-5000.ml.iit-ropar.truefoundry.cloud",  # ✅ WhatsApp backend
+    "https://agrikart-whatsapp-ws-2a-5000.ml.iit-ropar.truefoundry.cloud",  
 ]
 CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = [
     "https://agrikart-fd-ws-2a-80.ml.iit-ropar.truefoundry.cloud",
     "https://agrikart-ws-2a-8000.ml.iit-ropar.truefoundry.cloud",
-    "https://agrikart-whatsapp-ws-2a-5000.ml.iit-ropar.truefoundry.cloud",  # ✅ WhatsApp backend
+    "https://agrikart-whatsapp-ws-2a-5000.ml.iit-ropar.truefoundry.cloud",  
 ]
 
 
-# ✅ HTTPS & reverse proxy support (important for TrueFoundry, NGINX, etc.)
+#  HTTPS & reverse proxy support (important for TrueFoundry, NGINX, etc.)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
 SESSION_COOKIE_SECURE = True

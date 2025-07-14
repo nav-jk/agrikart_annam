@@ -13,11 +13,11 @@ from peft import PeftModel
 
 app = FastAPI()
 
-# ✅ Load Whisper model
+#  Load Whisper model
 device = "cuda" if torch.cuda.is_available() else "cpu"
 torch_dtype = torch.float16 if torch.cuda.is_available() else torch.float32
 
-print(f"🔧 Using device: {device}")
+print(f" Using device: {device}")
 
 asr_model_id = "openai/whisper-large-v3"
 asr_model = AutoModelForSpeechSeq2Seq.from_pretrained(
@@ -41,9 +41,9 @@ asr_pipe = pipeline(
     generate_kwargs={"forced_decoder_ids": forced_decoder_ids}
 )
 
-print("✅ Whisper model ready")
+print(" Whisper model ready")
 
-# ✅ Load Flan-T5 + LoRA
+#  Load Flan-T5 + LoRA
 base_model_name = "google/flan-t5-base"
 tokenizer = T5Tokenizer.from_pretrained(base_model_name)
 base_model = T5ForConditionalGeneration.from_pretrained(base_model_name)
@@ -53,11 +53,11 @@ model = PeftModel.from_pretrained(base_model, lora_model_path)
 model = model.to(device)
 model.eval()
 
-print("✅ Flan-T5 LoRA model ready")
+print(" Flan-T5 LoRA model ready")
 
-# ✅ LoRA Inference
+#  LoRA Inference
 def generate_answer(instruction: str):
-    print(f"📥 Instruction to LLM:\n{instruction}")
+    print(f" Instruction to LLM:\n{instruction}")
     input_ids = tokenizer(instruction, return_tensors="pt", truncation=True, padding=True).input_ids.to(device)
 
     outputs = model.generate(
@@ -69,10 +69,10 @@ def generate_answer(instruction: str):
     )
 
     decoded = tokenizer.decode(outputs[0], skip_special_tokens=True)
-    print(f"📤 LLM Response:\n{decoded}")
+    print(f" LLM Response:\n{decoded}")
     return decoded
 
-# ✅ /chat endpoint
+#  /chat endpoint
 @app.post("/chat/")
 async def chat(file: UploadFile = File(...)):
     print("📡 Received audio file")
@@ -82,12 +82,12 @@ async def chat(file: UploadFile = File(...)):
         audio_path = tmp.name
 
     # Transcribe audio
-    print("🔊 Transcribing...")
+    print(" Transcribing...")
     asr_result = asr_pipe(audio_path)
     os.remove(audio_path)
 
     question = asr_result["text"].strip()
-    print(f"🗣 Transcribed Text: {question}")
+    print(f" Transcribed Text: {question}")
 
     if not question:
         return {"error": "Transcription failed or empty"}

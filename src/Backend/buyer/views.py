@@ -13,7 +13,11 @@ from django.db import transaction
 from .utils import generate_random_lat_lon
 from logistics.models import CourierAssignment
 from logistics.utils import generate_order_pdf
-from django.http import FileResponse
+from django.http import FileResponse, Http404
+
+
+
+NGROK_URL=""    # Set your ngrok url here
 
 class CartViewSet(viewsets.ModelViewSet):
     serializer_class = CartItemSerializer
@@ -91,7 +95,7 @@ class CreateOrderFromCart(APIView):
         for farmer_phone, produce_list in notify_data.items():
             self.notify_farmer_on_order(farmer_phone, produce_list)
 
-        print("✅ Order created successfully")
+        print(" Order created successfully")
         return Response(OrderSerializer(order).data)
 
 
@@ -99,7 +103,7 @@ class CreateOrderFromCart(APIView):
         buyer = self.request.user.buyer
         order = Order.objects.filter(buyer=buyer).latest('id')
 
-        # 🛵 Get courier name for this order
+        #  Get courier name for this order
         courier_assignment = CourierAssignment.objects.filter(order=order).first()
         courier_name = courier_assignment.courier.name if courier_assignment else "Unknown"
 
@@ -113,7 +117,7 @@ class CreateOrderFromCart(APIView):
 
         try:
             print(f" Notifying farmer {farmer_phone} with items: {items}")
-            requests.post("https://agrikart-whatsapp-ws-2a-5000.ml.iit-ropar.truefoundry.cloud/notify-farmer", json=payload)
+            requests.post("f{NGROK_URL}/notify-farmer", json=payload)
         except Exception as e:
             print(f" Failed to notify farmer {farmer_phone}: {e}")
 
@@ -221,11 +225,6 @@ class OrderReceiptDownload(APIView):
         return FileResponse(buffer, as_attachment=True, filename=f"order_{pk}_receipt.pdf")
 
 # orders/views.py or buyer/views.py
-from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
-from django.http import FileResponse, Http404
-from buyer.models import Order
-from logistics.utils import generate_order_pdf
 
 class OrderReceiptView(APIView):
     permission_classes = [IsAuthenticated]

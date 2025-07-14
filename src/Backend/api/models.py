@@ -7,7 +7,7 @@ class User(AbstractUser):
     is_buyer = models.BooleanField(default=False)
     is_logistics = models.BooleanField(default=False) 
 
-    REQUIRED_FIELDS = ['phone_number', 'email']  # ✅ Add phone_number here
+    REQUIRED_FIELDS = ['phone_number', 'email']  
     
     def __str__(self):
         return self.username
