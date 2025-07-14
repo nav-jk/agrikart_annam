@@ -96,3 +96,32 @@ Each subcomponent of AgriKart.ai is modularized and documented individually:
 - [Backend (Django) README](src/backend/README.md)
 - [Frontend (React) README](src/frontend/README.md)
 - [WhatsApp Bot README](src/whatsapp_bot/README.md)
+
+##  Real-World Deployment Constraints
+
+While the project runs as microservices, some components require setup that can't be easily containerized or documented in a simple README:
+
+---
+
+###  WhatsApp Bot Requires:
+
+- A **commercial Facebook account**
+- **Verified Meta Business profile**
+- **Approved phone number** via WhatsApp Business API
+
+These steps involve human verification and cannot be scripted or demoed locally.
+
+---
+
+###  Whisper Transcription Service:
+
+- Requires a **GPU-enabled environment with CUDA support**
+- Not feasible to run locally on CPU due to performance constraints
+- Whisper models demand significant VRAM; they are **intended for cloud deployment only**
+
+---
+
+Due to these limitations, we've hosted a working version of the platform for demonstration and testing:
+
+ **Live Demo**:  
+[https://agrikart-fd-ws-2a-80.ml.iit-ropar.truefoundry.cloud/](https://agrikart-fd-ws-2a-80.ml.iit-ropar.truefoundry.cloud/)
